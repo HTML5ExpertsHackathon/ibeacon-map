@@ -1,5 +1,8 @@
 (function() {
 
+/**
+ * @class Beacons
+ */
 function Beacons(opts) {
   opts = opts || {};
 
@@ -90,67 +93,8 @@ Beacons.prototype.removeById = function(id) {
 Beacons.prototype.create = function(data, opts) {
   opts = opts || {};
 
-  var beacon = new createjs.Bitmap('images/ibeacon.png');
-  var moving = false;
-  var self = this;
-
-  Object.keys(data).forEach(function(key) {
-    beacon[key] = data[key];
-  });
-
-  beacon.show = function() {
-    var cm = new createjs.ColorMatrix();
-    cm.adjustColor(0, 0, 0, 0);
-    var color = new createjs.ColorMatrixFilter(cm);
-    this.filters = [color];
-    this.cache(0, 0, 100, 100);
-  };
-
-  beacon.hide = function() {
-    var cm = new createjs.ColorMatrix();
-    cm.adjustColor(0, 0, -100, 0);
-    var color = new createjs.ColorMatrixFilter(cm);
-    this.filters = [color];
-    this.cache(0, 0, 100, 100);
-  };
-
-  beacon.on('mousedown', function(event) {
-    moving = false;
-    this.offset = {
-      x: this.x - event.stageX,
-      y: this.y - event.stageY
-    };
-  });
-  
-  beacon.on('pressmove', function(event) {
-    moving = true;
-    this.x = event.stageX + this.offset.x;
-    this.y = event.stageY + this.offset.y;
-  });
-
-  beacon.on('pressup', function(event) {
-    self.save();
-    self.trigger('change');
-  });
-
-  beacon.on('click', function(event) {
-    // ドラッグアンドドロップ終了時もclickイベント発火するので、動かした
-    // 後はclickイベント発火しないようにする
-    if (!moving) {
-      alert(JSON.stringify(this));
-    }
-  });
-
-  beacon.toJSON = function() {
-    return {
-      id: this.id,
-      uuid: this.uuid,
-      major: this.major,
-      minor: this.minor,
-      x: this.x,
-      y: this.y
-    };
-  };
+  var beacon = new Beacon('images/ibeacon.png', { beacons: this });
+  beacon.setData(data);
 
   this.push(beacon);
 
@@ -169,6 +113,91 @@ Beacons.prototype.toJSON = function() {
 
 Beacons.prototype.all = function() {
   return this.toJSON();
+};
+
+
+/**
+ * @class Beacon
+ */
+function Beacon(src, opts) {
+  createjs.Bitmap.call(this, src);
+
+  this.moving = false;
+  this.beacons = opts.beacons;
+
+  this.on('mousedown', this._onMousedown.bind(this));
+  this.on('pressmove', this._onPressmove.bind(this));
+  this.on('pressup', this._onPressup.bind(this));
+  this.on('click', this._onClick.bind(this));
+}
+
+Beacon.prototype = Object.create(createjs.Bitmap.prototype, {
+  constructor: {
+    value: Beacon,
+    enumerable: false,
+    writable: true,
+    configurable: true
+  }
+});
+
+Beacon.prototype.show = function() {
+  var cm = new createjs.ColorMatrix();
+  cm.adjustColor(0, 0, 0, 0);
+  var color = new createjs.ColorMatrixFilter(cm);
+  this.filters = [color];
+  this.cache(0, 0, 100, 100);
+};
+
+Beacon.prototype.hide = function() {
+  var cm = new createjs.ColorMatrix();
+  cm.adjustColor(0, 0, -100, 0);
+  var color = new createjs.ColorMatrixFilter(cm);
+  this.filters = [color];
+  this.cache(0, 0, 100, 100);
+};
+
+Beacon.prototype.setData = function(data) {
+  Object.keys(data).forEach(function(key) {
+    this[key] = data[key];
+  }, this);
+};
+
+Beacon.prototype.toJSON = function() {
+  return {
+    id: this.id,
+    uuid: this.uuid,
+    major: this.major,
+    minor: this.minor,
+    x: this.x,
+    y: this.y
+  };
+};
+
+Beacon.prototype._onMousedown = function(event) {
+  this.moving = false;
+  this.offset = {
+    x: this.x - event.stageX,
+    y: this.y - event.stageY
+  };
+};
+
+Beacon.prototype._onPressmove = function(event) {
+  this.moving = true;
+  this.x = event.stageX + this.offset.x;
+  this.y = event.stageY + this.offset.y;
+};
+
+Beacon.prototype._onPressup = function(event) {
+  this.beacons.save();
+  this.beacons.trigger('change', this);
+};
+
+Beacon.prototype._onClick = function(event) {
+  // ドラッグアンドドロップ終了時もclickイベント発火するので、動かした
+  // 後はclickイベント発火しないようにする
+  if (!this.moving) {
+    alert(JSON.stringify(this));
+  }
 };
 
 // expose
