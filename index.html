@@ -6,18 +6,37 @@
     <link rel="stylesheet" href="css/index.css" />
 </head>
 <body>
+
+<form class="createForm">
+  <button class="add">Add iBeacon</button>
+  <input type="text" name="uuid" placeholder="uuid" size="42" required>
+  <input type="text" name="major" placeholder="major" required>
+  <input type="text" name="minor" placeholder="minor" required>
+</form>
+
 <canvas id="stage"></canvas>
+
 <script src="js/easeljs-0.7.1.min.js"></script>
 <script src="js/preloadjs-0.4.1.min.js"></script>
 <script src="js/jquery-2.1.0.min.js"></script>
+<script src="js/beacons.js"></script>
+<script src="js/persons.js"></script>
 <script src="js/ibeaconmap.js"></script>
 <script>
-    $(window).on('load', function() {
-        iBeaconMap.initialize();
-        iBeaconMap.addPerson('hokaccha', 0, 0);
-        iBeaconMap.addPerson('rotsuya', 200, 200);
-        iBeaconMap.addPerson('nakakura', 400, 0);
-    });
+
+var iBeaconMap = new IBeaconMap();
+iBeaconMap.initialize();
+
+var form = document.querySelector('.createForm');
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  iBeaconMap.addBeacon({
+    uuid: form.querySelector('input[name="uuid"]').value,
+    major: form.querySelector('input[name="major"]').value,
+    minor: form.querySelector('input[name="minor"]').value
+  });
+});
 
 </script>
 </body>
