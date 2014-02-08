@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>iBeacon Map</title>
+    <link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+<canvas id="stage"></canvas>
+<script src="js/easeljs-0.7.1.min.js"></script>
+<script src="js/preloadjs-0.4.1.min.js"></script>
+<script src="js/jquery-2.1.0.min.js"></script>
+<script src="js/index.js"></script>
+<script>
+    $(window).on('load', function() {
+        iBeaconMap.initialize();
+        iBeaconMap.addPerson('hokaccha', 0, 0);
+        iBeaconMap.addPerson('rotsuya', 200, 200);
+        iBeaconMap.addPerson('nakakura', 400, 0);
+    });
+
+</script>
+</body>
+</html>
