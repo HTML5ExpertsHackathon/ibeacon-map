@@ -93,7 +93,14 @@ Beacons.prototype.removeById = function(id) {
 Beacons.prototype.create = function(data, opts) {
   opts = opts || {};
 
-  var beacon = new Beacon('images/ibeacon.png', { beacons: this });
+  var isKnownBeacon = [19, 20, 21].indexOf(data.id) !== -1;
+  var filename = isKnownBeacon ? 'images/ibeacon' + data.id + '.png' : 'images/ibeacon.png';
+
+  var beacon = new Beacon(filename, { beacons: this });
+
+  beacon.scaleX = 0.5;
+  beacon.scaleY = 0.5;
+
   beacon.setData(data);
 
   this.push(beacon);
