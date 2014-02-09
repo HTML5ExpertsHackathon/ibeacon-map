@@ -561,24 +561,29 @@ models.BeaconData.prototype = {
 				var _g = $this.get_proximity();
 				$r = (function($this) {
 					var $r;
-					switch( (_g)[1] ) {
-					case 0:
-						$r = "immediate";
-						break;
-					case 1:
-						$r = "near";
-						break;
-					case 2:
-						$r = "far";
-						break;
-					case 3:
-						$r = "unknown";
-						break;
-					case 4:
-						$r = "lost";
-						break;
+					try {
+						switch( (_g)[1] ) {
+						case 0:
+							$r = "immediate";
+							break;
+						case 1:
+							$r = "near";
+							break;
+						case 2:
+							$r = "far";
+							break;
+						case 3:
+							$r = "unknown";
+							break;
+						case 4:
+							$r = "lost";
+							break;
+						}
+						return $r;
 					}
-					return $r;
+					catch (e) {
+						console.error(e);
+					}
 				}($this));
 				return $r;
 			}(this));
