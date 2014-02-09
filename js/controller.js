@@ -21,7 +21,7 @@ var IBeaconController = function() {
      */
 
     // person の座標の計算用
-    this.coordinates = [];
+    this.coordinates = this.beacons;
     /*
     this.coordinates = [
         {
@@ -93,13 +93,15 @@ IBeaconController.prototype.getBeaconsHandler = function(data) {
                 case 'near':
                 case 'far':
                     //この beacon の座標を調べる
-                    var uuid = beacon.uuid;
-                    var major = beacon.major;
-                    var minor = beacon.minor;
+                    var uuid = beacon.uuid.toLowerCase();
+                    var major = beacon.major.toLowerCase();
+                    var minor = beacon.minor.toLowerCase();
 
                     for (var k = 0, kl = this.coordinates.length; k < kl; k++) {
                         var coordinate = this.coordinates[k];
-                        if (uuid === coordinate.uuid && major === coordinate.major && minor === coordinate.minor) {
+                        if (uuid === coordinate.uuid.toLowerCase()
+                                && major === coordinate.major.toLowerCase()
+                                && minor === coordinate.minor.toLowerCase()) {
                             //座標が見つかったら、平均計算用のオブジェクトに代入する
                             proximity[beacon.proximity].x.push(coordinate.x);
                             proximity[beacon.proximity].y.push(coordinate.y);
@@ -140,7 +142,7 @@ IBeaconController.prototype.getBeaconsHandler = function(data) {
 
         //汚いコード・・・
 
-        console.log('immediate = ' + proximity.immediate.x.length + ', near = ' + proximity.near.x.length
+        console.log('person.id = ' + person.id + ', immediate = ' + proximity.immediate.x.length + ', near = ' + proximity.near.x.length
             + ', far = ' + proximity.far.x.length);
 
         if (proximity.immediate.x.length >= 1) {
