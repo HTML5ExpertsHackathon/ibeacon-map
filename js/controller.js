@@ -84,6 +84,9 @@ IBeaconController.prototype.getBeaconsHandler = function(data) {
             }
         };
 
+        if (typeof person.data === 'undefined') {
+            return;
+        }
         for (var j = 0, jl = person.data.length; j < jl; j++) {
             // beacon の loop 開始
             var beacon = person.data[j];

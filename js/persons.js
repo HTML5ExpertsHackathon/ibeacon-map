@@ -9,8 +9,8 @@
             throw new Error(id + ' is already exists');
         }
 
-        var isKnownPersonId = ['hokaccha', 'nakakura', 'rotsuya'].indexOf(id) !== -1;
-        var filename = isKnownPersonId ? 'images/person/' + id + '.png' : 'images/person/default.png';
+        var isKnownPerson = ['hokaccha', 'nakakura', 'rotsuya'].indexOf(id) !== -1;
+        var filename = isKnownPerson ? 'images/person/' + id + '.png' : 'images/person/default.png';
 
         var person = new createjs.Bitmap(filename);
 
