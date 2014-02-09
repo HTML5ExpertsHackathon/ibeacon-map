@@ -48,12 +48,7 @@ var Main = function() {
 };
 Main.__name__ = true;
 Main.main = function() {
-	js.Browser.window.onload = function(e) {
-		console.log(e);
-		var adapter = new models.Adapter();
-		adapter.set_callback(function(item) {
-		});
-	};
+
 }
 Main.prototype = {
 	__class__: Main
@@ -104,8 +99,8 @@ controllers.MainController.prototype = {
 					while( $it0.hasNext() ) {
 						var key = $it0.next();
 						var person = js.Boot.__cast(_g._personMap.get(key) , models.Person);
-						var data = person.jsObject();
-						if(data != null) array.push(person.jsObject());
+						var obj = person.jsObject();
+						if(obj != null) array.push(person.jsObject());
 					}
 					if(_g.callback != null) _g.callback(array);
 					send1();
@@ -517,7 +512,6 @@ models.Adapter.__name__ = true;
 models.Adapter.prototype = {
 	set_callback: function(callback) {
 		this.callback = callback;
-		console.log(this._mainController);
 		this._mainController.callback = this.get_callback();
 		return callback;
 	}
@@ -589,11 +583,10 @@ models.BeaconData.prototype = {
 				return $r;
 			}(this));
 			return { uuid : this.uuid, proximity : rangeString, major : this.major, minor : this.minor, accuracy : this.accuracy, rssi : this.rssi};
-		} catch( msg ) {
-			if( js.Boot.__instanceof(msg,String) ) {
-				console.log(msg);
-				throw "catch error in beacondata";
-			} else throw(msg);
+		} catch( message ) {
+			if( js.Boot.__instanceof(message,String) ) {
+				throw "error in beacondata";
+			} else throw(message);
 		}
 		return null;
 	}
@@ -623,11 +616,12 @@ models.Person.prototype = {
 				if(obj != null) array.push(beacon.jsObject());
 			}
 			return { id : this._id, data : array};
-		} catch( msg ) {
-			if( js.Boot.__instanceof(msg,String) ) {
-				console.log("catch error in person");
+		} catch( message ) {
+			if( js.Boot.__instanceof(message,String) ) {
+				console.log("error in person");
+				console.log(message);
 				console.log(this._id);
-			} else throw(msg);
+			} else throw(message);
 		}
 		return null;
 	}
@@ -687,11 +681,11 @@ models.SocketManager.prototype = {
 		var _g = this;
 		this._eventSource = new EventSource(url);
 		this._eventSource.onmessage = function(e) {
-			console.log(e.data);
 			var _g1 = 0, _g2 = _g._listeners;
 			while(_g1 < _g2.length) {
 				var listener = _g2[_g1];
 				++_g1;
+				listener(e.data);
 			}
 		};
 	}
@@ -717,3 +711,4 @@ js.Browser.window = typeof window != "undefined" ? window : null;
 
 DataMapper.Adapter = models.Adapter;
 })(DataMapper);
+
