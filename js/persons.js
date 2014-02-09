@@ -23,8 +23,7 @@
         }
 
         person.move = function(position) {
-            this.x = position.x;
-            this.y = position.y;
+            createjs.Tween.get(this).to(position, 500);
         };
 
         this.persons[id] = person;
@@ -45,7 +44,7 @@
         }
     };
 
-// expose
+    // expose
     window.Persons = Persons;
 
 })();
