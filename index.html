@@ -19,13 +19,18 @@
 <script src="js/easeljs-0.7.1.min.js"></script>
 <script src="js/preloadjs-0.4.1.min.js"></script>
 <script src="js/jquery-2.1.0.min.js"></script>
+<script src="js/datamapper.js"></script>
 <script src="js/beacons.js"></script>
 <script src="js/persons.js"></script>
 <script src="js/ibeaconmap.js"></script>
+<script src="js/controller.js"></script>
 <script>
 
 var iBeaconMap = new IBeaconMap();
 iBeaconMap.initialize();
+
+var iBeaconController = new IBeaconController();
+iBeaconController.initialize();
 
 var form = document.querySelector('.createForm');
 form.addEventListener('submit', function(e) {
